@@ -1,4 +1,9 @@
+.envrc
+.direnv
+
 __pycache__
 env
 .coverage
 htmlcov/
+
+node_modules
