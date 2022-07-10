@@ -85,6 +85,14 @@ docker-compose exec client npm test
 docker-compose exec client npm run coverage
 ```
 
+Linting:
+
+```bash
+docker-compose exec client npm run prettier:check
+
+docker-compose exec client npm run lint
+```
+
 ## Remote
 
 ## Odds and Ends

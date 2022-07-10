@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { Component } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 
 import AddUser from "./components/AddUser";
