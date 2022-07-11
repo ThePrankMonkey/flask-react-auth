@@ -2,14 +2,16 @@ import os
 
 from flask import Flask
 from flask_admin import Admin
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # instantiate the extensions
-db = SQLAlchemy()
-cors = CORS()
 admin = Admin(template_mode="bootstrap3")
+bcrypt = Bcrypt()
+cors = CORS()
+db = SQLAlchemy()
 
 
 def create_app(script_info=None):
@@ -23,10 +25,11 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
 
     # set up extensions
-    db.init_app(app)
-    cors.init_app(app, resources={r"*": {"origins": "*"}})
     if os.getenv("FLASK_ENV") == "development":
         admin.init_app(app)
+    bcrypt.init_app(app)
+    db.init_app(app)
+    cors.init_app(app, resources={r"*": {"origins": "*"}})
 
     # register api
     from src.api import api

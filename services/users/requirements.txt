@@ -1,4 +1,5 @@
 flask==2.1.1
+flask-bcrypt==1.0.1 # Probably not needed with Midway
 flask-cors==3.0.10
 Flask-Admin==1.6.0
 flask-restx==0.5.1
