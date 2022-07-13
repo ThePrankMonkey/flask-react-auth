@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource, fields
 from src.api.users.crud import (  # isort:skip
     get_all_users,
     get_user_by_email,
+    get_user_by_username,
     add_user,
     get_user_by_id,
     update_user,
@@ -37,6 +38,7 @@ class UsersList(Resource):
     @users_namespace.expect(user_post, validate=True)
     @users_namespace.response(201, "<user_email> was added!")
     @users_namespace.response(400, "Sorry. That email already exists.")
+    @users_namespace.response(400, "Sorry. That username already exists.")
     def post(self):
         """Creates a new user."""
         post_data = request.get_json()
@@ -48,6 +50,10 @@ class UsersList(Resource):
         user = get_user_by_email(email)
         if user:
             response_object["message"] = "Sorry. That email already exists."
+            return response_object, 400
+        user = get_user_by_username(username)
+        if user:
+            response_object["message"] = "Sorry. That username already exists."
             return response_object, 400
 
         add_user(username, email, password)

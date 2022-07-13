@@ -13,11 +13,17 @@ def test_add_user(test_app, monkeypatch):
     def mock_get_user_by_email(email):
         return None
 
+    def mock_get_user_by_username(email):
+        return None
+
     def mock_add_user(username, email, password):
         return True
 
     monkeypatch.setattr(
         src.api.users.views, "get_user_by_email", mock_get_user_by_email
+    )
+    monkeypatch.setattr(
+        src.api.users.views, "get_user_by_username", mock_get_user_by_username
     )
     monkeypatch.setattr(src.api.users.views, "add_user", mock_add_user)
 

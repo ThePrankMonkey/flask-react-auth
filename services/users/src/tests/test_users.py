@@ -78,6 +78,35 @@ def test_add_user_duplicate_email(test_app, test_database):
     assert "Sorry. That email already exists." in data["message"]
 
 
+def test_add_user_duplicate_username(test_app, test_database):
+    client = test_app.test_client()
+    client.post(
+        "/users",
+        data=json.dumps(
+            {
+                "username": "test_add_user_duplicate_username",
+                "email": "test_add_user_duplicate_username1@testdriven.io",
+                "password": "greaterthaneight",
+            }
+        ),
+        content_type="application/json",
+    )
+    resp = client.post(
+        "/users",
+        data=json.dumps(
+            {
+                "username": "test_add_user_duplicate_username",
+                "email": "test_add_user_duplicate_username2@testdriven.io",
+                "password": "greaterthaneight",
+            }
+        ),
+        content_type="application/json",
+    )
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 400
+    assert "Sorry. That username already exists." in data["message"]
+
+
 def test_single_user(test_app, test_database, add_user):
     user = add_user("jeffrey", "jeffrey@testdriven.io", "greaterthaneight")
     client = test_app.test_client()

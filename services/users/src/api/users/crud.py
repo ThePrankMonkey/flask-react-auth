@@ -14,6 +14,10 @@ def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
 
+def get_user_by_username(username):
+    return User.query.filter_by(username=username).first()
+
+
 def add_user(username, email, password):
     user = User(username=username, email=email, password=password)
     db.session.add(user)
