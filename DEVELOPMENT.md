@@ -49,6 +49,8 @@ http GET http://localhost:5004/users
 http --json POST http://localhost:5004/users username=someone email=someone@something.com
 http --json PUT http://localhost:5004/users/3 username=foo email=foo@bar.com
 http DELETE http://localhost:5004/users/3
+
+http --json POST http://localhost:5004/auth/login email=michael@mherman.org password=supersecret | jq -r '"Bearer \(.access_token)"'
 ```
 
 Database Access
