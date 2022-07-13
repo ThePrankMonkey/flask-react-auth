@@ -4,12 +4,18 @@ https://testdriven.io/courses/auth-flask-react/
 
 ## Local
 
-### Backend
-
 Creation
 
 ```bash
 docker-compose up -d --build
+```
+
+### Backend
+
+Access
+
+```bash
+docker-compose exec api flask shell
 ```
 
 Initialize

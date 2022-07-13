@@ -34,6 +34,8 @@ refresh = auth_namespace.model(
 tokens = auth_namespace.clone(
     "Access and refresh_tokens", refresh, {"access_token": fields.String(required=True)}
 )
+parser = auth_namespace.parser()
+parser.add_argument("Authorization", location="headers")
 
 
 class Register(Resource):
@@ -113,8 +115,27 @@ class Refresh(Resource):
 
 
 class Status(Resource):
+    @auth_namespace.marshal_with(user)
+    @auth_namespace.response(200, "Success")
+    @auth_namespace.response(401, "Invalid token")
+    @auth_namespace.expect(parser)
     def get(self):
-        pass
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                access_token = auth_header.split(' ')[1]
+                resp = User.decode_token(access_token)
+                user = get_user_by_id(resp)
+                if not user:
+                    auth_namespace.abort(401, "Invalid token")
+                return user, 200
+            except jwt.ExpiredSignatureError:
+                auth_namespace.abort(401, "Signature expired. Please log in again.")
+                # return "Signature expired. Please log in again."
+            except jwt.InvalidTokenError:
+                auth_namespace.abort(401, "Invalid token. Please log in again.")
+        else:
+            auth_namespace.abort(403, 'Token required')
 
 
 auth_namespace.add_resource(Register, "/register")
