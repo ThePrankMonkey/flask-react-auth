@@ -1,11 +1,11 @@
 # services/users/src/api/auth.py
 
+import jwt
 from flask import request
 from flask_restx import Namespace, Resource, fields
-import jwt
 
 from src import bcrypt
-from src.api.users.crud import get_user_by_email, get_user_by_id, add_user
+from src.api.users.crud import add_user, get_user_by_email, get_user_by_id
 from src.api.users.models import User
 
 auth_namespace = Namespace("auth")
@@ -75,10 +75,7 @@ class Login(Resource):
         access_token = user.encode_token(user.id, "access")
         refresh_token = user.encode_token(user.id, "refresh")
 
-        response_object = {
-            "access_token": access_token,
-            "refresh_token": refresh_token
-        }
+        response_object = {"access_token": access_token, "refresh_token": refresh_token}
         return response_object, 200
 
 
@@ -120,10 +117,10 @@ class Status(Resource):
     @auth_namespace.response(401, "Invalid token")
     @auth_namespace.expect(parser)
     def get(self):
-        auth_header = request.headers.get('Authorization')
+        auth_header = request.headers.get("Authorization")
         if auth_header:
             try:
-                access_token = auth_header.split(' ')[1]
+                access_token = auth_header.split(" ")[1]
                 resp = User.decode_token(access_token)
                 user = get_user_by_id(resp)
                 if not user:
@@ -135,7 +132,7 @@ class Status(Resource):
             except jwt.InvalidTokenError:
                 auth_namespace.abort(401, "Invalid token. Please log in again.")
         else:
-            auth_namespace.abort(403, 'Token required')
+            auth_namespace.abort(403, "Token required")
 
 
 auth_namespace.add_resource(Register, "/register")
