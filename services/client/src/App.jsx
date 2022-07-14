@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Route, Routes } from "react-router-dom";
 import axios from "axios";
+import { Route, Routes } from "react-router-dom";
 
 import About from "./components/About";
 import AddUser from "./components/AddUser";
@@ -15,27 +15,17 @@ class App extends Component {
 
     this.state = {
       users: [],
-      username: "",
-      email: "",
       title: "TestDriven.io",
     };
 
     this.addUser = this.addUser.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
     this.getUsers();
   }
 
-  addUser(event) {
-    event.preventDefault();
-
-    const data = {
-      username: this.state.username,
-      email: this.state.email,
-    };
-
+  addUser(data) {
     axios
       .post(`${process.env.REACT_APP_API_SERVICE_URL}/users`, data)
       .then((res) => {
@@ -56,12 +46,6 @@ class App extends Component {
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  handleChange(event) {
-    const obj = {};
-    obj[event.target.name] = event.target.value;
-    this.setState(obj);
   }
 
   render() {
