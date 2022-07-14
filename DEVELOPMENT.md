@@ -39,7 +39,11 @@ docker-compose exec api isort src
 Test
 
 ```bash
+docker-compose exec api python -m pytest "src/tests" -p no:warnings
+
 docker-compose exec api python -m pytest "src/tests" -p no:warnings --cov="src"
+
+docker-compose exec api python -m pytest "src/tests" -p no:warnings --cov="src" --cov-report html
 ```
 
 Functional Tests
@@ -105,11 +109,69 @@ docker-compose exec client npm run lint
 
 ## Odds and Ends
 
+### Fix httpie
+
 In order to get `http` to work in my Windows WSL Ubuntu 20.04 environment, I had to install it with pip and set an alias.
 
 ```bash
 python3 -m pip install httpie
 alias http='python3 -m httpie'
+```
+
+### direnv Functions
+
+```bash
+lint_backend() {
+    echo "Linting Backend Flake8"
+    docker-compose exec api flake8 src
+    echo "Linting Backend Black"
+    docker-compose exec api black src
+    echo "Linting Backend Isort"
+    docker-compose exec api isort src
+}
+
+lint_frontend() {
+    echo "Linting Frontend Eslint"
+    docker-compose exec client npm run lint
+    echo "Linting Frontend Prettier"
+    docker-compose exec client npm run prettier:write
+}
+
+test_backend() {
+    echo "Testing Backtend"
+    docker-compose exec api python -m pytest "src/tests" -p no:warnings --cov="src" --cov-report html
+}
+
+test_frontend() {
+    echo "Testing Frontend"
+    docker-compose exec client npm test
+}
+
+project_down() {
+    echo "Shutting Project Down"
+    docker-compose down -v
+}
+
+project_init() {
+    project_up
+    echo "Setting up test database"
+    docker-compose exec api python manage.py recreate_db
+    docker-compose exec api python manage.py seed_db
+}
+
+project_up() {
+    echo "Bringing Project Up"
+    docker-compose up -d --build
+
+}
+
+export_function lint_backend
+export_function lint_frontend
+export_function test_backend
+export_function test_frontend
+export_function project_down
+export_function project_init
+export_function project_up
 ```
 
 ## Issues
