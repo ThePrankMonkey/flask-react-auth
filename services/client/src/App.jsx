@@ -16,9 +16,13 @@ class App extends Component {
     this.state = {
       users: [],
       title: "TestDriven.io",
+      accessToken: null,
     };
 
     this.addUser = this.addUser.bind(this);
+    this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
+    this.handleRegisterFormSubmit = this.handleRegisterFormSubmit.bind(this);
+    this.isAuthenticated = this.isAuthenticated.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +50,38 @@ class App extends Component {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  handleLoginFormSubmit(data) {
+    const url = `${process.env.REACT_APP_API_SERVICE_URL}/auth/login`;
+    axios
+      .post(url, data)
+      .then((res) => {
+        // console.log(res.data);
+        this.setState({ accessToken: res.data.access_token });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleRegisterFormSubmit(data) {
+    const url = `${process.env.REACT_APP_API_SERVICE_URL}/auth/register`;
+    axios
+      .post(url, data)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  isAuthenticated() {
+    if (this.state.accessToken) {
+      return true;
+    }
+    return false;
   }
 
   render() {
@@ -80,8 +116,28 @@ class App extends Component {
                     }
                   />
                   <Route exact path="/about" element={<About />} />
-                  <Route exact path="/register" element={<RegisterForm />} />
-                  <Route exact path="/login" element={<LoginForm />} />
+                  <Route
+                    exact
+                    path="/register"
+                    element={
+                      <RegisterForm
+                        // eslint-disable-next-line react/jsx-handler-names
+                        handleRegisterFormSubmit={this.handleRegisterFormSubmit}
+                        isAuthenticated={this.isAuthenticated}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/login"
+                    element={
+                      <LoginForm
+                        // eslint-disable-next-line react/jsx-handler-names
+                        handleLoginFormSubmit={this.handleLoginFormSubmit}
+                        isAuthenticated={this.isAuthenticated}
+                      />
+                    }
+                  />
                 </Routes>
               </div>
             </div>
