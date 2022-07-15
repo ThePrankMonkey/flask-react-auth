@@ -23,6 +23,8 @@ class App extends Component {
     this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
     this.handleRegisterFormSubmit = this.handleRegisterFormSubmit.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
+    this.validRefresh = this.validRefresh.bind(this);
   }
 
   componentDidMount() {
@@ -57,8 +59,10 @@ class App extends Component {
     axios
       .post(url, data)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         this.setState({ accessToken: res.data.access_token });
+        this.getUsers();
+        window.localStorage.setItem("refreshToken", res.data.refresh_token);
       })
       .catch((err) => {
         console.log(err);
@@ -78,8 +82,33 @@ class App extends Component {
   }
 
   isAuthenticated() {
-    if (this.state.accessToken) {
+    if (this.state.accessToken || this.validRefresh()) {
       return true;
+    }
+    return false;
+  }
+
+  logoutUser() {
+    window.localStorage.removeItem("refreshToken");
+    this.setState({ accessToken: null });
+  }
+
+  validRefresh() {
+    const token = window.localStorage.getItem("refreshToken");
+    if (token) {
+      axios
+        .post(`${process.env.REACT_APP_API_SERVICE_URL}/auth/refresh`, {
+          refresh_token: token,
+        })
+        .then((res) => {
+          this.setState({ accessToken: res.data.access_token });
+          this.getUsers();
+          window.localStorage.setItem("refreshToken", res.data.refresh_token);
+          return true;
+        })
+        .catch((err) => {
+          return false;
+        });
     }
     return false;
   }
@@ -87,7 +116,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar title={this.state.title} />
+        <NavBar title={this.state.title} logoutUser={this.logoutUser} />
         <section className="section">
           <div className="container">
             <div className="columns">

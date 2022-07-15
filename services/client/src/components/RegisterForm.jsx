@@ -86,6 +86,7 @@ const RegisterForm = (props) => {
                   }
                   type="email"
                   placeholder="Enter an email address"
+                  autoComplete="username"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -108,6 +109,7 @@ const RegisterForm = (props) => {
                   }
                   type="password"
                   placeholder="Enter a password"
+                  autoComplete="new-password"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}

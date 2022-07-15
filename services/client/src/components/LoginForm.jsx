@@ -57,6 +57,7 @@ const LoginForm = (props) => {
                   }
                   type="email"
                   placeholder="Enter an email address"
+                  autoComplete="username"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -79,6 +80,7 @@ const LoginForm = (props) => {
                   }
                   type="password"
                   placeholder="Enter a password"
+                  autoComplete="current-password"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}

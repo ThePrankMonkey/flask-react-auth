@@ -54,6 +54,7 @@ const AddUser = (props) => (
               }
               type="text"
               placeholder="Enter a username"
+              autoComplete="off"
               value={values.username}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -74,6 +75,7 @@ const AddUser = (props) => (
               }
               type="email"
               placeholder="Enter an email address"
+              autoComplete="off"
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -94,6 +96,7 @@ const AddUser = (props) => (
               }
               type="password"
               placeholder="Enter a password"
+              autoComplete="off"
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
