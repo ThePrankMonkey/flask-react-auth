@@ -71,7 +71,9 @@ const RegisterForm = (props) => {
                   onBlur={handleBlur}
                 />
                 {errors.username && touched.username && (
-                  <div className="input-feedback">{errors.username}</div>
+                  <div className="input-feedback" data-testid="errors-username">
+                    {errors.username}
+                  </div>
                 )}
               </div>
               <div className="field">
@@ -92,7 +94,9 @@ const RegisterForm = (props) => {
                   onBlur={handleBlur}
                 />
                 {errors.email && touched.email && (
-                  <div className="input-feedback">{errors.email}</div>
+                  <div className="input-feedback" data-testid="errors-email">
+                    {errors.email}
+                  </div>
                 )}
               </div>
               <div className="field">
@@ -115,7 +119,9 @@ const RegisterForm = (props) => {
                   onBlur={handleBlur}
                 />
                 {errors.password && touched.password && (
-                  <div className="input-feedback">{errors.password}</div>
+                  <div className="input-feedback" data-testid="errors-password">
+                    {errors.password}
+                  </div>
                 )}
               </div>
               <input
